@@ -105,14 +105,42 @@ namespace OSMReader {
 		
 		return wf;
 	}
+	
+	/** filter equivalent to osmnx's drive_service filter */
+	way_filter_tags way_filter_tags::road_filter_drive_service() {
+		way_filter_tags wf;
+		/* must be highway */
+		wf.include_tags.insert(std::make_pair(std::string("highway"),std::unordered_set<std::string>()));
+		
+		/* filtering identical to drive+service option in osmnx:
+filters['drive_service'] = ('["area"!~"yes"]["highway"!~"cycleway|footway|path|pedestrian|steps|track|corridor|'
+                                'elevator|escalator|proposed|construction|bridleway|abandoned|platform|raceway"]'
+                                '["motor_vehicle"!~"no"]["motorcar"!~"no"]{}'
+                                '["service"!~"parking|parking_aisle|private|emergency_access"]').format(
+        settings.default_access)
+default_access = '["access"!~"private"]'
+      */
+		wf.exclude_tags.insert(std::make_pair(std::string("area"), std::unordered_set<std::string>{"yes"}));
+		wf.exclude_tags.insert(std::make_pair(std::string("highway"),
+			std::unordered_set<std::string>{"cycleway","footway","path",
+			"pedestrian","steps","track","corridor","elevator","escalator",
+			"proposed","construction","bridleway","abandoned","platform",
+			"raceway"}));
+		wf.exclude_tags.insert(std::make_pair(std::string("motor_vehicle"), std::unordered_set<std::string>{"no"}));
+		wf.exclude_tags.insert(std::make_pair(std::string("motorcar"), std::unordered_set<std::string>{"no"}));
+		wf.exclude_tags.insert(std::make_pair(std::string("service"),
+			std::unordered_set<std::string>{"parking","parking_aisle","private","emergency_access"}));
+		wf.exclude_tags.insert(std::make_pair(std::string("access"), std::unordered_set<std::string>{"private"}));
+		
+		return wf;
+	}
 		
 	/** filter for roads with some additions for Singapore and Hong Kong / Shenzhen 
 	 * 
 	 * note: border crossings from Singapore to Malaysia and between Hong Kong and Shenzhen are
 	 * explicitely excluded; this way, the OSM network can be cut to one of these cities base
 	 * on finding the largest connected component in a box centered on it */
-	way_filter_tags way_filter_tags::default_road_filter_sg_hk_sz() {
-		way_filter_tags wf = default_road_filter();
+	void way_filter_tags::filter_sg_hk_sz(way_filter_tags& wf) {
 		/* for Shenzhen, exclude the connection to Hong Kong */
 		/* for Singapore, exclude connections to Malaysia */
 		wf.exclude_tags.insert(std::make_pair(std::string("name"),std::unordered_set<std::string>{"落馬洲橋 Lok Ma Chau Birdge",
@@ -122,8 +150,6 @@ namespace OSMReader {
 		wf.exclude_tags.insert(std::make_pair(std::string("name:en"),std::unordered_set<std::string>{"Lok Ma Chau Birdge",
 			"Man Kam To Road","Shenzhen Bay Bridge","Sha Ho Road","Johor–Singapore Causeway",
 			"Malaysia–Singapore Second Link"}));
-				
-		return wf;
 	}
 	
 }

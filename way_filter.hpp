@@ -69,13 +69,16 @@ class way_filter_tags : public way_filter {
 		
 		/** filter for roads */
 		static way_filter_tags default_road_filter();
-			
-		/** filter for roads with some additions for Singapore and Hong Kong / Shenzhen 
+		
+		/** filter equivalent to osmnx's drive_service filter */
+		static way_filter_tags road_filter_drive_service();
+		
+		/** add filter for roads for border crossings for Singapore and Hong Kong / Shenzhen 
 		 * 
 		 * note: border crossings from Singapore to Malaysia and between Hong Kong and Shenzhen are
 		 * explicitely excluded; this way, the OSM network can be cut to one of these cities based
 		 * on finding the largest connected component in a box centered on it */
-		static way_filter_tags default_road_filter_sg_hk_sz();
+		static void filter_sg_hk_sz(way_filter_tags& wf);
 };
 
 }

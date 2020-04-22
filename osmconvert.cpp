@@ -55,6 +55,7 @@ int main(int argc, char **argv)
 	bool out_shapefile = false;
 	bool sg_sz_filter = false;
 	bool write_edge_ids_shp = false;
+	bool drive_filter = false;
 	
 	for(int i=1;i<argc;i++) {
 		if(argv[i][0] == '-') switch(argv[i][1]) {
@@ -76,6 +77,9 @@ int main(int argc, char **argv)
 #endif
 			case 'b':
 				bike_filter = true;
+				break;
+			case 'd':
+				drive_filter = true;
 				break;
 			case 'C':
 				sccs_dir = true;
@@ -106,9 +110,10 @@ int main(int argc, char **argv)
 	OSMReader::way_filter_tags wf;
 	if(bike_filter) wf = OSMReader::way_filter_tags::default_bike_filter_sg();
 	else {
-		if(sg_sz_filter) wf = OSMReader::way_filter_tags::default_road_filter_sg_hk_sz();
+		if(drive_filter) wf = OSMReader::way_filter_tags::road_filter_drive_service();
 		else wf = OSMReader::way_filter_tags::default_road_filter();
 	}
+	if(sg_sz_filter) OSMReader::way_filter_tags::filter_sg_hk_sz(wf);
 	
 	OSMReader::OSMMap map(wf,replace_ids);
 	
