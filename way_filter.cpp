@@ -77,7 +77,7 @@ namespace OSMReader {
 		wf.exclude_tags.insert(std::make_pair(std::string("bicycle"),std::unordered_set<std::string>{"no"}));
 		/* exclude pricate roads */
 		wf.exclude_tags.insert(std::make_pair(std::string("service"),std::unordered_set<std::string>{"private"}));
-		wf.exclude_tags.insert(std::make_pair(std::string("access"),std::unordered_set<std::string>{"private","no"}));
+		wf.exclude_tags.insert(std::make_pair(std::string("access"),std::unordered_set<std::string>{"private"}));
 		
 		/* Singapore specific exclude for roads that are not suitable for cycling, but are not filtered out by the previous */
 		wf.exclude_tags.insert(std::make_pair(std::string("name"),std::unordered_set<std::string>{"Keppel Way","Laluan Tambak Johor–Singapura"}));

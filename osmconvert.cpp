@@ -56,6 +56,7 @@ int main(int argc, char **argv)
 	bool sg_sz_filter = false;
 	bool write_edge_ids_shp = false;
 	bool drive_filter = false;
+	bool ignore_dir = false;
 	
 	for(int i=1;i<argc;i++) {
 		if(argv[i][0] == '-') switch(argv[i][1]) {
@@ -95,6 +96,9 @@ int main(int argc, char **argv)
 			case 'e':
 				write_edge_ids_shp = true;
 				break;
+			case 'D':
+				ignore_dir = true;
+				break;
 			default:
 				fprintf(stderr,"Unknown parameter: %s!\n",argv[i]);
 				break;
@@ -116,7 +120,7 @@ int main(int argc, char **argv)
 	if(sg_sz_filter) OSMReader::way_filter_tags::filter_sg_hk_sz(wf);
 	
 	OSMReader::OSMMap map(wf,replace_ids);
-	
+	map.ignore_dir = ignore_dir;
 	{
 		osmium::io::Reader reader(infn);
 		osmium::apply(reader,map);

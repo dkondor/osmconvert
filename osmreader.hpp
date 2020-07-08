@@ -99,12 +99,16 @@ class OSMMap : public osmium::handler::Handler {
 		/** Function to determine if an OSM way's direction. Returns 0 for two-way, 1 for one-way following the nodes' order, -1 for reversed case. */
 		static int is_oneway(const osmium::Way& way);
 		
-		/** Function to determine if an OSM way's direction, based on it's OSM ID. Returns 0 for two-way, 1 for one-way following the nodes' order, -1 for reversed case. */
-		int is_oneway(osmium::unsigned_object_id_type way_id) const { return is_oneway(istash.get<osmium::Way>(ways.at(way_id))); }
+		/** Function to determine if an OSM way's direction, based on it's OSM ID. Returns 0 for two-way, 1 for one-way following the nodes' order, -1 for reversed case. 
+		 * !!NOT USED!! */
+		/* int is_oneway(osmium::unsigned_object_id_type way_id) const { return is_oneway(istash.get<osmium::Way>(ways.at(way_id))); } */
 		
 	public:
 		/** Initialize a new instance based on the way_filter provided */
-		explicit OSMMap(const way_filter& wf_, bool replace_ids_ = false) : wf(wf_), max_id(0), replace_ids(replace_ids_) { }
+		explicit OSMMap(const way_filter& wf_, bool replace_ids_ = false) : wf(wf_), max_id(0), replace_ids(replace_ids_), ignore_dir(false) { }
+		
+		/** Flag whether to ignore direction of way. If set, all ways are addded as bidirectional edges. Can be useful when creating cycling network or if oneway tags are not reliable. */
+		bool ignore_dir;
 		
 		/** Function to handle a node read from OSM data (part of the osmium::handler::Handler interface) */
 		void node(const osmium::Node& node);

@@ -76,7 +76,7 @@ namespace OSMReader {
 		if(replace_ids) get_id(way_id);
 		
 		/* check the direction of this way */
-		int dir = is_oneway(way);
+		int dir = ignore_dir ? 0 : is_oneway(way);
 		
 		/* process all nodes in this way */
 		osmium::unsigned_object_id_type last_node_id = 18446744073709551615UL;
